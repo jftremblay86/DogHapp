@@ -1,0 +1,83 @@
+﻿<Window x:Class="DogFetchApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DogFetchApp"
+        xmlns:p="clr-namespace:DogFetchApp.Properties"
+        mc:Ignorable="d"
+        Title="Dog picture fetcher" Height="720" Width="750">
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Margin" Value="5" />
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="5" />
+        </Style>
+    </Window.Resources>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="{x:Static p:Resources.Setting}">
+                <MenuItem Header="{x:Static p:Resources.Language}">
+                    <MenuItem Header= "Francais" Command="{Binding ChangeLanguageCmd}" CommandParameter="fr"/>
+                    <MenuItem Header="Anglais" Command="{Binding ChangeLanguageCmd}" CommandParameter="en"/>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+        <StatusBar DockPanel.Dock="Bottom">
+            <TextBlock Text="{Binding SelectedBreed}"/>
+            <Hyperlink>
+                <TextBlock Text="{Binding SelectedAmount}"/>
+            </Hyperlink>
+        </StatusBar>
+        <Grid Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Column="0" Grid.Row="0" Text="{x:Static p:Resources.Breed}"/>
+            <ComboBox Grid.Column="1" Grid.Row="0" SelectedValue="{Binding SelectedBreed}" ItemsSource="{Binding Breeds}" />
+
+            <TextBlock Grid.Row="1" Text="{x:Static p:Resources.NbPicture}"/>
+            <ComboBox Grid.Row="1" Grid.Column="1" 
+                      SelectedItem="{Binding SelectedAmount,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                      ItemsSource="{Binding Quantities}"
+                      IsSynchronizedWithCurrentItem="True" />
+            <Button Grid.Row="2" Grid.Column="1" Content="{x:Static p:Resources.Fetch}" Width="150" Command="{Binding FetchImage}"/>
+            <Grid Grid.Row="3" Grid.ColumnSpan="2" Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <ScrollViewer  IsEnabled="True">
+                <ListView Grid.Row="0" ItemsSource="{Binding Images}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="5" HorizontalAlignment="Stretch"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                                    <Image Source="{Binding}" HorizontalAlignment="Stretch" VerticalAlignment="Top" Stretch="UniformToFill" Height="300" Width="300"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+    </DockPanel>
+</Window>
